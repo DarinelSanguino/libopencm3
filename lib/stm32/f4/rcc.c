@@ -45,9 +45,9 @@
 /**@{*/
 
 /* Set the default clock frequencies after reset. */
-uint32_t rcc_ahb_frequency = 16000000;
-uint32_t rcc_apb1_frequency = 16000000;
-uint32_t rcc_apb2_frequency = 16000000;
+uint32_t rcc_ahb_frequency = 25000000;
+uint32_t rcc_apb1_frequency = 25000000;
+uint32_t rcc_apb2_frequency = 25000000;
 
 const struct rcc_clock_scale rcc_hsi_configs[RCC_CLOCK_3V3_END] = {
 	{ /* 84MHz */
