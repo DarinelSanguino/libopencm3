@@ -391,6 +391,7 @@ void i2c_peripheral_disable(uint32_t i2c);
 void i2c_send_start(uint32_t i2c);
 void i2c_send_stop(uint32_t i2c);
 void i2c_clear_stop(uint32_t i2c);
+bool i2c_is_available(uint32_t i2c, uint8_t addr);
 void i2c_set_own_7bit_slave_address(uint32_t i2c, uint8_t slave);
 void i2c_set_own_10bit_slave_address(uint32_t i2c, uint16_t slave);
 void i2c_set_own_7bit_slave_address_two(uint32_t i2c, uint8_t slave);

@@ -143,6 +143,47 @@ void i2c_clear_stop(uint32_t i2c)
 }
 
 /*---------------------------------------------------------------------------*/
+
+/** @brief I2C is Device Available.
+
+Check if device with a given I2C address is available to start transaction.
+
+@param[in] i2c Unsigned int32. I2C register base address @ref i2c_reg_base.
+@param[in] addr Unsigned int8. Slave address 0...127.
+*/
+
+bool i2c_is_available(uint32_t i2c, uint8_t addr)
+{
+	while ((I2C_SR2(i2c) & I2C_SR2_BUSY));
+
+	i2c_send_start(i2c);
+
+	/* Wait for the end of the start condition, master mode selected, and BUSY bit set */
+	while ( !( (I2C_SR1(i2c) & I2C_SR1_SB)
+		&& (I2C_SR2(i2c) & I2C_SR2_MSL)
+		&& (I2C_SR2(i2c) & I2C_SR2_BUSY) ));
+
+	i2c_send_7bit_address(i2c, addr, I2C_WRITE);
+
+	/* Waiting for address is transferred. */
+	while (!(I2C_SR1(i2c) & I2C_SR1_ADDR)) {
+		//If device is not available
+		if(I2C_SR1(i2c) & I2C_SR1_AF) {
+			i2c_send_stop(i2c);
+			I2C_SR1(i2c) &= ~I2C_SR1_AF;
+			return 0;
+		}
+	}
+
+	/* Clearing ADDR condition sequence. */
+	(void)I2C_SR2(i2c);
+	i2c_send_stop(i2c);
+	return 1;
+
+}
+
+/*---------------------------------------------------------------------------*/
+
 /** @brief I2C Set the 7 bit Slave Address for the Peripheral.
 
 This sets an address for Slave mode operation, in 7 bit form.
