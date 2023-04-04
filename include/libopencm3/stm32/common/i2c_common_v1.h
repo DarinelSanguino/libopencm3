@@ -371,6 +371,16 @@ enum i2c_cr2_freq_values  {
 #define I2C_READ			1
 /**@}*/
 
+/* --- I2C function-like macros---------------------------------------------- */
+// 1,000,000 * per_clk_freq_mhz / (2 * i2c_speed) = 500,000 * per_clk_freq_mhz / i2c_speed
+#define I2C_GET_CCR_SM(i2c_speed, per_clk_freq_mhz) (500000LU * per_clk_freq_mhz / ((unsigned int)(i2c_speed)))
+
+//If DUTY = 0 => 1,000,000 * per_clk_freq_mhz / (3 * i2c_speed)
+//If DUTY = 1 => 1,000,000 * per_clk_freq_mhz / (25 * i2c_speed)
+#define I2C_GET_CCR_FM(i2c_speed, i2c_duty, per_clk_freq_mhz) (i2c_duty == I2C_CCR_DUTY_DIV2 ? 1000000LU * per_clk_freq_mhz / (3 * i2c_speed) : 1000000LU * per_clk_freq_mhz / (25 * i2c_speed))
+
+#define I2C_CALC_RISE_TIME(max_rise_time, per_clk_period) ((max_rise_time / per_clk_period) + 1)
+
 /* --- I2C function prototypes---------------------------------------------- */
 
 /**
